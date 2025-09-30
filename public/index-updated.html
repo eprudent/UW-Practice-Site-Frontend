@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UW Practice Site - AI Integration</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 UW Practice Site - AI Integration</h1>
+            <p>Node.js + Claude + Codex + YOLO v8 Integration Platform</p>
+        </header>
+
+        <div class="status-panel">
+            <h2>System Status</h2>
+            <div id="status-indicators">
+                <div class="status-item">
+                    <span class="status-label">Claude API:</span>
+                    <span id="claude-status" class="status-value">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Codex API:</span>
+                    <span id="codex-status" class="status-value">Checking...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">YOLO v8:</span>
+                    <span id="yolo-status" class="status-value">Checking...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('claude')">Claude AI</button>
+            <button class="tab-button" onclick="switchTab('codex')">Codex</button>
+            <button class="tab-button" onclick="switchTab('yolo')">YOLO v8</button>
+            <button class="tab-button" onclick="switchTab('integrated')">Integrated</button>
+        </div>
+
+        <!-- Claude Tab -->
+        <div id="claude-tab" class="tab-content active">
+            <h2>Claude AI Assistant</h2>
+            <div class="input-group">
+                <textarea id="claude-input" placeholder="Ask Claude anything..."></textarea>
+                <button onclick="sendToClaude()">Send to Claude</button>
+            </div>
+            <div class="code-section">
+                <h3>Code Generation</h3>
+                <textarea id="claude-code-prompt" placeholder="Describe the code you want Claude to generate..."></textarea>
+                <select id="claude-language">
+                    <option value="javascript">JavaScript</option>
+                    <option value="python">Python</option>
+                    <option value="java">Java</option>
+                    <option value="cpp">C++</option>
+                </select>
+                <button onclick="generateCodeWithClaude()">Generate Code</button>
+            </div>
+            <div id="claude-response" class="response-area"></div>
+        </div>
+
+        <!-- Codex Tab -->
+        <div id="codex-tab" class="tab-content">
+            <h2>OpenAI Codex</h2>
+            <div class="input-group">
+                <textarea id="codex-input" placeholder="Enter code for completion or generation..."></textarea>
+                <button onclick="completeWithCodex()">Complete Code</button>
+                <button onclick="generateWithCodex()">Generate New</button>
+            </div>
+            <div class="code-section">
+                <h3>Code Analysis</h3>
+                <textarea id="codex-analyze" placeholder="Paste code to analyze..."></textarea>
+                <button onclick="analyzeWithCodex()">Analyze Code</button>
+                <button onclick="optimizeWithCodex()">Optimize Code</button>
+            </div>
+            <div id="codex-response" class="response-area"></div>
+        </div>
+
+        <!-- YOLO v8 Tab -->
+        <div id="yolo-tab" class="tab-content">
+            <h2>YOLO v8 Object Detection</h2>
+            
+            <!-- Image Upload Section -->
+            <div class="upload-section">
+                <h3>📸 Upload Image</h3>
+                <input type="file" id="image-upload" accept="image/*" onchange="handleImageUpload(event)">
+                <input type="file" id="file-upload" accept="image/*" style="margin-left: 10px;">
+                <div id="image-preview" class="image-preview"></div>
+                <div id="image-info"></div>
+            </div>
+
+            <!-- Detection Controls -->
+            <div class="detection-controls">
+                <h3>🎯 Detection Settings</h3>
+                <div class="control-group">
+                    <label for="confidence-slider">Confidence Threshold: <span id="confidence-value">0.5</span></label>
+                    <input type="range" id="confidence-slider" min="0.1" max="1.0" step="0.1" value="0.5" 
+                           oninput="document.getElementById('confidence-value').textContent = this.value">
+                </div>
+                <div class="button-group">
+                    <button onclick="detectObjects()" id="detect-btn" disabled>Detect Objects (Base64)</button>
+                    <button onclick="detectObjectsWithFile()" id="detect-file-btn">Detect Objects (File)</button>
+                    <button onclick="getYOLOStatus()">Get Status</button>
+                    <button onclick="getYOLOClasses()">Show Classes</button>
+                </div>
+            </div>
+
+            <!-- Model Information -->
+            <div class="model-info">
+                <h3>📊 Model Information</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>Model:</strong> YOLOv8n (Ultralytics)
+                    </div>
+                    <div class="info-item">
+                        <strong>Classes:</strong> 80 COCO classes
+                    </div>
+                    <div class="info-item">
+                        <strong>Input Size:</strong> 640x640
+                    </div>
+                    <div class="info-item">
+                        <strong>Framework:</strong> PyTorch
+                    </div>
+                </div>
+            </div>
+
+            <div id="yolo-response" class="response-area"></div>
+        </div>
+
+        <!-- Integrated Tab -->
+        <div id="integrated-tab" class="tab-content">
+            <h2>Integrated AI Workflow</h2>
+            <div class="workflow-section">
+                <h3>AI-Powered Development Workflow</h3>
+                <div class="workflow-step">
+                    <h4>1. Code Generation</h4>
+                    <textarea id="workflow-prompt" placeholder="Describe your project or feature..."></textarea>
+                    <button onclick="startWorkflow()">Start AI Workflow</button>
+                </div>
+                <div class="workflow-step">
+                    <h4>2. Code Review & Optimization</h4>
+                    <div id="workflow-code" class="code-display"></div>
+                </div>
+                <div class="workflow-step">
+                    <h4>3. Testing & Validation</h4>
+                    <div id="workflow-tests" class="code-display"></div>
+                </div>
+            </div>
+            <div id="workflow-response" class="response-area"></div>
+        </div>
+    </div>
+
+    <script src="script-updated.js"></script>
+</body>
+</html>

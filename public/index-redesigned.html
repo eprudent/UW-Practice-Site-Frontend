@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 UW Practice Site - AI Integration Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .status-panel {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .status-panel h2 {
+            margin-bottom: 15px;
+            color: #4a5568;
+        }
+
+        .status-indicators {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 15px;
+            background: #f7fafc;
+            border-radius: 8px;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .status-item.active {
+            border-left-color: #48bb78;
+            background: #f0fff4;
+        }
+
+        .status-item.inactive {
+            border-left-color: #f56565;
+            background: #fff5f5;
+        }
+
+        .status-label {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .status-value {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .status-value.active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .status-value.inactive {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+
+        .tab-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .tab-buttons {
+            display: flex;
+            background: #f7fafc;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .tab-button {
+            flex: 1;
+            padding: 15px 20px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #718096;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+
+        .tab-button:hover {
+            background: #edf2f7;
+            color: #4a5568;
+        }
+
+        .tab-button.active {
+            background: white;
+            color: #667eea;
+            border-bottom-color: #667eea;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 30px;
+            min-height: 600px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* AI Tab Styles */
+        .ai-section {
+            margin-bottom: 30px;
+        }
+
+        .ai-section h3 {
+            color: #4a5568;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .ai-input-group {
+            margin-bottom: 20px;
+        }
+
+        .ai-input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .ai-input-group input,
+        .ai-input-group textarea,
+        .ai-input-group select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .ai-input-group input:focus,
+        .ai-input-group textarea:focus,
+        .ai-input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .ai-input-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #38a169;
+        }
+
+        .btn-danger {
+            background: #f56565;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #e53e3e;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        /* YOLO Tab Styles */
+        .yolo-container {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 30px;
+            height: 70vh;
+        }
+
+        .camera-section {
+            background: #1a202c;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .camera-header {
+            background: #2d3748;
+            padding: 15px 20px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .camera-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #f56565;
+            animation: pulse 2s infinite;
+        }
+
+        .status-indicator.active {
+            background: #48bb78;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .camera-viewport {
+            flex: 1;
+            position: relative;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .camera-feed {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: none;
+        }
+
+        .camera-placeholder {
+            color: #718096;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        .detection-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .detection-box {
+            position: absolute;
+            border: 3px solid #48bb78;
+            background: rgba(72, 187, 120, 0.1);
+            border-radius: 4px;
+        }
+
+        .detection-label {
+            position: absolute;
+            top: -25px;
+            left: 0;
+            background: #48bb78;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .detection-confidence {
+            position: absolute;
+            top: -25px;
+            right: 0;
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .controls-section {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .control-group {
+            margin-bottom: 20px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e2e8f0;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+        }
+
+        .slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+        }
+
+        .value-display {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 5px;
+            font-size: 0.9rem;
+            color: #718096;
+        }
+
+        .detection-stats {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #718096;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detection-list {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .detection-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .detection-item:last-child {
+            border-bottom: none;
+        }
+
+        .detection-class {
+            font-weight: 600;
+            color: #4a5568;
+        }
+
+        .detection-conf {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .response-area {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            min-height: 100px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+
+        .loading {
+            color: #667eea;
+            font-style: italic;
+        }
+
+        .success {
+            color: #48bb78;
+            font-weight: 600;
+        }
+
+        .error {
+            color: #f56565;
+            font-weight: 600;
+        }
+
+        .code-display {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .yolo-container {
+                grid-template-columns: 1fr;
+                height: auto;
+            }
+            
+            .controls-section {
+                order: -1;
+            }
+            
+            .tab-buttons {
+                flex-direction: column;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 UW Practice Site - AI Integration Platform</h1>
+            <p>Claude + Codex + YOLO v8 Live Camera Detection</p>
+        </header>
+
+        <div class="status-panel">
+            <h2>System Status</h2>
+            <div class="status-indicators">
+                <div class="status-item" id="ai-status-item">
+                    <span class="status-label">AI Services:</span>
+                    <span id="ai-status" class="status-value">Checking...</span>
+                </div>
+                <div class="status-item" id="yolo-status-item">
+                    <span class="status-label">YOLO v8 Live:</span>
+                    <span id="yolo-status" class="status-value">Checking...</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-container">
+            <div class="tab-buttons">
+                <button class="tab-button active" onclick="switchTab('ai')">🤖 AI Assistant</button>
+                <button class="tab-button" onclick="switchTab('yolo')">📹 Live Camera Detection</button>
+            </div>
+
+            <!-- AI Tab (Combined Claude + Codex) -->
+            <div id="ai-tab" class="tab-content active">
+                <h2>🤖 AI Assistant - Claude & Codex Integration</h2>
+                
+                <div class="ai-section">
+                    <h3>💬 Claude Chat</h3>
+                    <div class="ai-input-group">
+                        <label for="claude-message">Message:</label>
+                        <textarea id="claude-message" placeholder="Ask Claude anything..."></textarea>
+                    </div>
+                    <div class="ai-input-group">
+                        <label for="claude-model">Model:</label>
+                        <select id="claude-model">
+                            <option value="claude-3-sonnet-20240229">Claude 3 Sonnet</option>
+                            <option value="claude-3-haiku-20240307">Claude 3 Haiku</option>
+                            <option value="claude-3-opus-20240229">Claude 3 Opus</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="sendClaudeMessage()">Send to Claude</button>
+                        <button class="btn btn-secondary" onclick="clearResponse('ai-response')">Clear</button>
+                    </div>
+                </div>
+
+                <div class="ai-section">
+                    <h3>💻 Codex Code Generation</h3>
+                    <div class="ai-input-group">
+                        <label for="codex-prompt">Code Prompt:</label>
+                        <textarea id="codex-prompt" placeholder="Describe the code you want to generate..."></textarea>
+                    </div>
+                    <div class="ai-input-group">
+                        <label for="codex-language">Language:</label>
+                        <select id="codex-language">
+                            <option value="javascript">JavaScript</option>
+                            <option value="python">Python</option>
+                            <option value="java">Java</option>
+                            <option value="csharp">C#</option>
+                            <option value="cpp">C++</option>
+                            <option value="go">Go</option>
+                            <option value="rust">Rust</option>
+                        </select>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="generateCode()">Generate Code</button>
+                        <button class="btn btn-success" onclick="explainCode()">Explain Code</button>
+                        <button class="btn btn-secondary" onclick="optimizeCode()">Optimize Code</button>
+                    </div>
+                </div>
+
+                <div class="ai-section">
+                    <h3>🔧 Code Analysis & Debugging</h3>
+                    <div class="ai-input-group">
+                        <label for="code-input">Code to Analyze:</label>
+                        <textarea id="code-input" placeholder="Paste your code here for analysis..."></textarea>
+                    </div>
+                    <div class="button-group">
+                        <button class="btn btn-primary" onclick="analyzeCode()">Analyze Code</button>
+                        <button class="btn btn-success" onclick="debugCode()">Debug Code</button>
+                        <button class="btn btn-secondary" onclick="refactorCode()">Refactor Code</button>
+                    </div>
+                </div>
+
+                <div id="ai-response" class="response-area"></div>
+            </div>
+
+            <!-- YOLO Tab -->
+            <div id="yolo-tab" class="tab-content">
+                <h2>📹 Live Camera Detection with YOLO v8</h2>
+                
+                <div class="yolo-container">
+                    <!-- Camera Section -->
+                    <div class="camera-section">
+                        <div class="camera-header">
+                            <div class="camera-status">
+                                <div class="status-indicator" id="camera-indicator"></div>
+                                <span id="camera-status-text">Camera: Not Started</span>
+                            </div>
+                            <div class="button-group">
+                                <button class="btn btn-success" onclick="startCamera()" id="start-camera-btn">Start Camera</button>
+                                <button class="btn btn-danger" onclick="stopCamera()" id="stop-camera-btn" disabled>Stop Camera</button>
+                            </div>
+                        </div>
+                        
+                        <div class="camera-viewport">
+                            <div class="camera-placeholder" id="camera-placeholder">
+                                📹 Click "Start Camera" to begin live detection
+                            </div>
+                            <img id="camera-feed" class="camera-feed" alt="Camera Feed">
+                            <div id="detection-overlay" class="detection-overlay"></div>
+                        </div>
+                    </div>
+
+                    <!-- Controls Section -->
+                    <div class="controls-section">
+                        <div class="control-group">
+                            <label for="confidence-slider">Confidence Threshold: <span id="confidence-value">0.5</span></label>
+                            <input type="range" id="confidence-slider" class="slider" min="0.1" max="1.0" step="0.1" value="0.5">
+                            <div class="value-display">
+                                <span>0.1</span>
+                                <span>1.0</span>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label for="detection-interval">Detection Interval (ms): <span id="interval-value">1000</span></label>
+                            <input type="range" id="detection-interval" class="slider" min="100" max="5000" step="100" value="1000">
+                            <div class="value-display">
+                                <span>100ms</span>
+                                <span>5s</span>
+                            </div>
+                        </div>
+
+                        <div class="button-group">
+                            <button class="btn btn-primary" onclick="startLiveDetection()" id="start-detection-btn" disabled>Start Detection</button>
+                            <button class="btn btn-danger" onclick="stopLiveDetection()" id="stop-detection-btn" disabled>Stop Detection</button>
+                            <button class="btn btn-success" onclick="analyzeDetections()" id="analyze-btn" disabled>Analyze with AI</button>
+                        </div>
+
+                        <div class="detection-stats" id="detection-stats" style="display: none;">
+                            <h4>📊 Detection Statistics</h4>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-value" id="objects-count">0</div>
+                                    <div class="stat-label">Objects</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="fps-counter">0</div>
+                                    <div class="stat-label">FPS</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="detection-time">0ms</div>
+                                    <div class="stat-label">Last Detection</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-value" id="total-detections">0</div>
+                                    <div class="stat-label">Total</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detection-list" id="detection-list" style="display: none;">
+                            <h4>🎯 Current Detections</h4>
+                            <div id="detections-container"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="yolo-response" class="response-area"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script-redesigned.js"></script>
+</body>
+</html>
